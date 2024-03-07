@@ -23,7 +23,8 @@ def init_llm():
     global llm, llm_embeddings
     # Initialize the language model with the OpenAI API key
     api_key="YOUR API KEY"
-    # ---> TODO: write your code here <----
+    # Initialize the language model with the OpenAI API key
+    llm = OpenAI(model_name="gpt-3.5-turbo", openai_api_key=api_key)
     
     # Initialize the embeddings for the language model
     llm_embeddings = OpenAIEmbeddings(openai_api_key = api_key)
@@ -32,7 +33,7 @@ def init_llm():
 def process_document(document_path):
     global conversation_retrieval_chain, llm, llm_embeddings
     # Load the document
-    # ---> TODO: write your code here <---
+    loader = PyPDFLoader(document_path)
     
     documents = loader.load()
     # Split the document into chunks
@@ -51,7 +52,8 @@ def process_prompt(prompt):
     global chat_history
     # Pass the prompt and the chat history to the conversation_retrieval_chain object
     result = conversation_retrieval_chain({"question": prompt, "chat_history": chat_history})
-    # ---> TODO: Append the prompt and the bot's response to the chat history <--
+    # Update the chat history
+    chat_history.append((prompt, result["answer"]))
 
     # Return the model's response
     return result['answer']
